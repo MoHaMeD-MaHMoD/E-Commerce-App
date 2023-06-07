@@ -13,6 +13,15 @@ class Cart with ChangeNotifier {
   
     notifyListeners();
   }
+
+
+  removeProduct(Product product) {
+    selectedProducts.remove(product);
+       totalPrice = totalPrice - product.price.round();
+
+  
+    notifyListeners();
+  }
 }
 
 /*
