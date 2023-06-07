@@ -1,6 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, dead_code
 
+import 'package:e_commerce_app/model/Products.dart';
+import 'package:e_commerce_app/pages/Detail.dart';
+import 'package:e_commerce_app/provider/Cart.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../Shared/myColors.dart';
 
@@ -9,7 +13,58 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final cartInstance = Provider.of<Cart>(context);
     return Scaffold(
+        body: Padding(
+          padding: const EdgeInsets.only(top: 22),
+          child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 2,
+                  childAspectRatio: 3 / 2,
+                  crossAxisSpacing: 10,
+                  mainAxisSpacing: 33),
+              itemCount: myProducts.length,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              Details(product: myProducts[index])),
+                    );
+                  },
+                  child: GridTile(
+                    child: Stack(children: [
+                      Positioned(
+                        top: -3,
+                        bottom: -9,
+                        right: 0,
+                        left: 0,
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(55),
+                            child: Image.asset(myProducts[index].img)),
+                      ),
+                    ]),
+                    footer: GridTileBar(
+                      // backgroundColor: Color.fromARGB(66, 73, 127, 110),
+                      trailing: IconButton(
+                          color: Color.fromARGB(255, 62, 94, 70),
+                          onPressed: () {
+                            cartInstance.addProduct(myProducts[index]);
+                          },
+                          icon: Icon(Icons.add)),
+
+                      leading: Text("\$ ${myProducts[index].price.toString()}",style: TextStyle(fontSize : 16 , fontWeight: FontWeight.w500),),
+
+                      title: Text(
+                        "",
+                      ),
+                    ),
+                  ),
+                );
+              }),
+        ),
         appBar: AppBar(
           actions: [
             Row(
@@ -20,7 +75,7 @@ class Home extends StatelessWidget {
                       bottom: 24,
                       child: Container(
                           child: Text(
-                            "8",
+                            "${cartInstance.selectedProducts.length}",
                             style: TextStyle(
                                 fontSize: 16,
                                 color: Color.fromARGB(255, 0, 0, 0)),
@@ -38,12 +93,12 @@ class Home extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(right: 12),
                   child: Text(
-                    "\$ 13",
-                    style: TextStyle(fontSize: 18),
+                    "\$ ${cartInstance.totalPrice}",
+                    style: TextStyle(fontSize: 18 ),
                   ),
                 ),
               ],
-            ),
+            )
           ],
           backgroundColor: appbar,
           title: Text("Home"),
@@ -96,3 +151,42 @@ class Home extends StatelessWidget {
         ));
   }
 }
+
+
+/*
+
+Row(
+              children: [
+                 Stack(
+                    children: [
+                      Positioned(
+                        bottom: 24,
+                        child: Container(
+                            child: Text(
+                              "${cartInstancee.selectedProducts.length}",
+                              style: TextStyle(
+                                  fontSize: 16,
+                                  color: Color.fromARGB(255, 0, 0, 0)),
+                            ),
+                            padding: EdgeInsets.all(5),
+                            decoration: BoxDecoration(
+                                color: second, shape: BoxShape.circle)),
+                      ),
+                      IconButton(
+                        onPressed: () {},
+                        icon: Icon(Icons.add_shopping_cart),
+                      ),
+                    ],
+                  ),
+                Padding(
+                  padding: const EdgeInsets.only(right: 12),
+                  child: Text(
+                    "\$ 13",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              ],
+            )            
+
+
+*/

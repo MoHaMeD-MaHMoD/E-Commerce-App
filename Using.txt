@@ -1,2 +1,5 @@
 1-Reusable Widgets
 2-Constant
+fireBase
+3-state management approaches
+	Provider
