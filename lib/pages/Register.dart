@@ -21,6 +21,41 @@ class _RegisterState extends State<Register> {
   bool isLoading = false;
   bool isVisable = false;
 
+  bool has8Charachter = false;
+  bool hasLowerCase = false;
+  bool hasUpperCase = false;
+  bool has1Number = false;
+  bool hasSpecialCharachter = false;
+
+  onPasswordChanged(String password) {
+    has8Charachter = false;
+    hasLowerCase = false;
+    hasUpperCase = false;
+    has1Number = false;
+    hasSpecialCharachter = false;
+    setState(() {
+      if (password.contains(RegExp(r'.{8,}'))) {
+        has8Charachter = true;
+      }
+
+      if (password.contains(RegExp(r'[a-z]'))) {
+        hasLowerCase = true;
+      }
+
+      if (password.contains(RegExp(r'[A-Z]'))) {
+        hasUpperCase = true;
+      }
+
+      if (password.contains(RegExp(r'[0-9]'))) {
+        has1Number = true;
+      }
+
+      if (password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'))) {
+        hasSpecialCharachter = true;
+      }
+    });
+  }
+
   bool isEmail(String em) {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
@@ -85,9 +120,6 @@ class _RegisterState extends State<Register> {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const SizedBox(
-                      height: 64,
-                    ),
                     TextField(
                         keyboardType: TextInputType.text,
                         obscureText: false,
@@ -99,9 +131,9 @@ class _RegisterState extends State<Register> {
                     ),
                     TextFormField(
                         validator: (value) {
-                          return (value != null && !isEmail(value)
-                              ? "enter VAlidate email"
-                              : null);
+                          return isEmail(value!)
+                              ? null
+                              : "enter VAlidate email";
                         },
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         controller: emailController,
@@ -114,9 +146,12 @@ class _RegisterState extends State<Register> {
                       height: 33,
                     ),
                     TextFormField(
+                        onChanged: (password) {
+                          onPasswordChanged(password);
+                        },
                         controller: passwordController,
                         keyboardType: TextInputType.text,
-                        obscureText: isVisable ? true:false,
+                        obscureText: isVisable ? true : false,
                         decoration: textFieldDecsoration.copyWith(
                             hintText: "Enter Your Password : ",
                             suffix: IconButton(
@@ -129,11 +164,136 @@ class _RegisterState extends State<Register> {
                                     ? Icon(Icons.visibility)
                                     : Icon(Icons.visibility_off)))),
                     const SizedBox(
+                      height: 20,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: has8Charachter
+                                    ? Colors.green
+                                    : Colors.white,
+                                border: Border.all(color: Colors.grey)),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 16,
+                            )),
+                        SizedBox(
+                          width: 14,
+                        ),
+                        Text("At least 8 characters")
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: has1Number ? Colors.green : Colors.white,
+                                border: Border.all(color: Colors.grey)),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 16,
+                            )),
+                        SizedBox(
+                          width: 14,
+                        ),
+                        Text("At least 1 number")
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    hasUpperCase ? Colors.green : Colors.white,
+                                border: Border.all(color: Colors.grey)),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 16,
+                            )),
+                        SizedBox(
+                          width: 14,
+                        ),
+                        Text("Has Upper Case")
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color:
+                                    hasLowerCase ? Colors.green : Colors.white,
+                                border: Border.all(color: Colors.grey)),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 16,
+                            )),
+                        SizedBox(
+                          width: 14,
+                        ),
+                        Text("Has Lower Case")
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    Row(
+                      children: [
+                        Container(
+                            height: 20,
+                            width: 20,
+                            decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: hasSpecialCharachter
+                                    ? Colors.green
+                                    : Colors.white,
+                                border: Border.all(color: Colors.grey)),
+                            child: Icon(
+                              Icons.check,
+                              color: Colors.white,
+                              size: 16,
+                            )),
+                        SizedBox(
+                          width: 14,
+                        ),
+                        Text("Has Special Characters")
+                      ],
+                    ),
+                    const SizedBox(
                       height: 33,
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        if (_formKey.currentState!.validate()) {
+                        if (_formKey.currentState!.validate() &&
+                            hasLowerCase &&
+                            hasUpperCase &&
+                            has1Number &&
+                            hasSpecialCharachter) {
                           createAccount();
                         } else {
                           showSnackBar(context, "Check Your Data");
