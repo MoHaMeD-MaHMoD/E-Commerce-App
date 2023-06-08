@@ -16,7 +16,20 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>();
+
   bool isLoading = false;
+  bool isVisable = false;
+
+  bool isEmail(String em) {
+    String p =
+        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+
+    RegExp regExp = new RegExp(p);
+
+    return regExp.hasMatch(em);
+  }
+
   final emailController = TextEditingController();
 
   final passwordController = TextEditingController();
@@ -45,8 +58,7 @@ class _RegisterState extends State<Register> {
 
     setState(() {
       isLoading = false;
-              showSnackBar(context, "created Successfully");
-
+      showSnackBar(context, "created Successfully");
     });
   }
 
@@ -68,79 +80,101 @@ class _RegisterState extends State<Register> {
           child: Padding(
             padding: const EdgeInsets.all(33.0),
             child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 64,
-                  ),
-                  TextField(
-                      keyboardType: TextInputType.text,
-                      obscureText: false,
-                      decoration: textFieldDecsoration.copyWith(
-                        hintText: "Enter Your username : ",
-                      )),
-                  const SizedBox(
-                    height: 33,
-                  ),
-                  TextField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      obscureText: false,
-                      decoration: textFieldDecsoration.copyWith(
-                        hintText: "Enter Your Email : ",
-                      )),
-                  const SizedBox(
-                    height: 33,
-                  ),
-                  TextField(
-                      controller: passwordController,
-                      keyboardType: TextInputType.text,
-                      obscureText: true,
-                      decoration: textFieldDecsoration.copyWith(
-                        hintText: "Enter Your Password : ",
-                      )),
-                  const SizedBox(
-                    height: 33,
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      createAccount();
-                    },
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : Text(
-                            "Register",
-                            style: TextStyle(fontSize: 19),
-                          ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(BTNColor),
-                      padding: MaterialStateProperty.all(EdgeInsets.all(12)),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(
+                      height: 64,
                     ),
-                  ),
-                  const SizedBox(
-                    height: 33,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("have an account?", style: TextStyle(fontSize: 18)),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Login()),
-                            );
-                          },
-                          child: Text('Log in',
-                              style: TextStyle(
-                                  color: Colors.black, fontSize: 18))),
-                    ],
-                  )
-                ],
+                    TextField(
+                        keyboardType: TextInputType.text,
+                        obscureText: false,
+                        decoration: textFieldDecsoration.copyWith(
+                            hintText: "Enter Your username : ",
+                            suffix: Icon(Icons.person))),
+                    const SizedBox(
+                      height: 33,
+                    ),
+                    TextFormField(
+                        validator: (value) {
+                          return (value != null && !isEmail(value)
+                              ? "enter VAlidate email"
+                              : null);
+                        },
+                        autovalidateMode: AutovalidateMode.onUserInteraction,
+                        controller: emailController,
+                        keyboardType: TextInputType.emailAddress,
+                        obscureText: false,
+                        decoration: textFieldDecsoration.copyWith(
+                            hintText: "Enter Your Email : ",
+                            suffix: Icon(Icons.email))),
+                    const SizedBox(
+                      height: 33,
+                    ),
+                    TextFormField(
+                        controller: passwordController,
+                        keyboardType: TextInputType.text,
+                        obscureText: isVisable ? true:false,
+                        decoration: textFieldDecsoration.copyWith(
+                            hintText: "Enter Your Password : ",
+                            suffix: IconButton(
+                                onPressed: () {
+                                  setState(() {
+                                    isVisable = !isVisable;
+                                  });
+                                },
+                                icon: isVisable
+                                    ? Icon(Icons.visibility)
+                                    : Icon(Icons.visibility_off)))),
+                    const SizedBox(
+                      height: 33,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          createAccount();
+                        } else {
+                          showSnackBar(context, "Check Your Data");
+                        }
+                      },
+                      child: isLoading
+                          ? CircularProgressIndicator()
+                          : Text(
+                              "Register",
+                              style: TextStyle(fontSize: 19),
+                            ),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(BTNColor),
+                        padding: MaterialStateProperty.all(EdgeInsets.all(12)),
+                        shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(8))),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 33,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text("have an account?",
+                            style: TextStyle(fontSize: 18)),
+                        TextButton(
+                            onPressed: () {
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const Login()),
+                              );
+                            },
+                            child: Text('Log in',
+                                style: TextStyle(
+                                    color: Colors.black, fontSize: 18))),
+                      ],
+                    )
+                  ],
+                ),
               ),
             ),
           ),
