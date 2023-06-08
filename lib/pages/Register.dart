@@ -93,7 +93,6 @@ class _RegisterState extends State<Register> {
 
     setState(() {
       isLoading = false;
-      showSnackBar(context, "created Successfully");
     });
   }
 
@@ -288,13 +287,18 @@ class _RegisterState extends State<Register> {
                       height: 33,
                     ),
                     ElevatedButton(
-                      onPressed: () {
+                      onPressed: () async {
                         if (_formKey.currentState!.validate() &&
                             hasLowerCase &&
                             hasUpperCase &&
                             has1Number &&
                             hasSpecialCharachter) {
-                          createAccount();
+                          await createAccount();
+                          if (!mounted) return;
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Login()),
+                          );
                         } else {
                           showSnackBar(context, "Check Your Data");
                         }
@@ -325,7 +329,7 @@ class _RegisterState extends State<Register> {
                               Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const Login()),
+                                    builder: (context) => Login()),
                               );
                             },
                             child: Text('Log in',

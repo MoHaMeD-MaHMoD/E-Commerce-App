@@ -2,12 +2,47 @@
 
 import 'package:e_commerce_app/Shared/Constant.dart';
 import 'package:e_commerce_app/pages/Register.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../Shared/myColors.dart';
+import '../Shared/snackbar';
 
-class Login extends StatelessWidget {
-  const Login({Key? key}) : super(key: key);
+class Login extends StatefulWidget {
+  Login({Key? key}) : super(key: key);
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  bool isLoading = false;
+  bool isVisable = false;
+  final emailController = TextEditingController();
+
+  final passwordController = TextEditingController();
+
+  logIn() async {
+    setState(() {
+      isLoading = true;
+    });
+    try {
+      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: emailController.text, password: passwordController.text);
+      // showSnackBar(context, "doneee");
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'user-not-found') {
+        showSnackBar(context, "No user found for that email.");
+      } else if (e.code == 'wrong-password') {
+        showSnackBar(context, "Wrong password provided for that user.");
+      } else
+        showSnackBar(context, "${e.code} error");
+    }
+
+    setState(() {
+      isLoading = false;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,31 +58,45 @@ class Login extends StatelessWidget {
                 const SizedBox(
                   height: 64,
                 ),
-                TextField(
+                TextFormField(
+                    controller: emailController,
                     keyboardType: TextInputType.emailAddress,
                     obscureText: false,
                     decoration: textFieldDecsoration.copyWith(
-                      hintText: "Enter Your Email : ",
-                    )),
+                        hintText: "Enter Your Email : ",
+                        suffix: Icon(Icons.email))),
                 const SizedBox(
                   height: 33,
                 ),
-                TextField(
+                TextFormField(
+                    controller: passwordController,
                     keyboardType: TextInputType.text,
-                    obscureText: true,
+                    obscureText: isVisable ? true : false,
                     decoration: textFieldDecsoration.copyWith(
-                      //textFieldDecsoration
-                      hintText: "Enter Your Password : ",
-                    )),
+                        //textFieldDecsoration
+                        hintText: "Enter Your Password : ",
+                        suffix: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isVisable = !isVisable;
+                              });
+                            },
+                            icon: isVisable
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off)))),
                 const SizedBox(
                   height: 33,
                 ),
                 ElevatedButton(
-                  onPressed: () {},
-                  child: Text(
-                    "Sign in",
-                    style: TextStyle(fontSize: 19),
-                  ),
+                  onPressed: () {
+                    logIn();
+                  },
+                  child: isLoading
+                      ? CircularProgressIndicator()
+                      : Text(
+                          "Sign in",
+                          style: TextStyle(fontSize: 19),
+                        ),
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all(BTNColor),
                     padding: MaterialStateProperty.all(EdgeInsets.all(12)),
@@ -67,8 +116,7 @@ class Login extends StatelessWidget {
                         onPressed: () {
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(
-                                builder: (context) =>  Register()),
+                            MaterialPageRoute(builder: (context) => Register()),
                           );
                         },
                         child: Text('sign up',

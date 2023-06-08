@@ -1,8 +1,10 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, dead_code
 
 import 'package:e_commerce_app/model/Products.dart';
+import 'package:e_commerce_app/pages/CheckOut.dart';
 import 'package:e_commerce_app/pages/Detail.dart';
 import 'package:e_commerce_app/provider/Cart.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -100,7 +102,15 @@ class Home extends StatelessWidget {
                   ListTile(
                       title: Text("My products"),
                       leading: Icon(Icons.add_shopping_cart),
-                      onTap: () {}),
+                      onTap: () {
+
+                         Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              CheckOut()),
+                    );
+                      }),
                   ListTile(
                       title: Text("About"),
                       leading: Icon(Icons.help_center),
@@ -108,7 +118,12 @@ class Home extends StatelessWidget {
                   ListTile(
                       title: Text("Logout"),
                       leading: Icon(Icons.exit_to_app),
-                      onTap: () {}),
+                      onTap: ()async {
+
+await FirebaseAuth.instance.signOut();
+
+
+                      }),
                 ],
               ),
               Container(
