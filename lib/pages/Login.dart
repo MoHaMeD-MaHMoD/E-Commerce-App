@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../Shared/myColors.dart';
 import '../Shared/snackbar';
+import 'forgot_passowrd.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -52,79 +53,92 @@ class _LoginState extends State<Login> {
         body: Center(
           child: Padding(
             padding: const EdgeInsets.all(33.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(
-                  height: 64,
-                ),
-                TextFormField(
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    obscureText: false,
-                    decoration: textFieldDecsoration.copyWith(
-                        hintText: "Enter Your Email : ",
-                        suffix: Icon(Icons.email))),
-                const SizedBox(
-                  height: 33,
-                ),
-                TextFormField(
-                    controller: passwordController,
-                    keyboardType: TextInputType.text,
-                    obscureText: isVisable ? true : false,
-                    decoration: textFieldDecsoration.copyWith(
-                        //textFieldDecsoration
-                        hintText: "Enter Your Password : ",
-                        suffix: IconButton(
-                            onPressed: () {
-                              setState(() {
-                                isVisable = !isVisable;
-                              });
-                            },
-                            icon: isVisable
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off)))),
-                const SizedBox(
-                  height: 33,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    logIn();
-                  },
-                  child: isLoading
-                      ? CircularProgressIndicator()
-                      : Text(
-                          "Sign in",
-                          style: TextStyle(fontSize: 19),
-                        ),
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(BTNColor),
-                    padding: MaterialStateProperty.all(EdgeInsets.all(12)),
-                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8))),
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const SizedBox(
+                    height: 64,
                   ),
-                ),
-                const SizedBox(
-                  height: 33,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Do not have an account?",
-                        style: TextStyle(fontSize: 18)),
-                    TextButton(
-                        onPressed: () {
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => Register()),
-                          );
-                        },
-                        child: Text('sign up',
-                            style:
-                                TextStyle(color: Colors.black, fontSize: 18))),
-                  ],
-                )
-              ],
+                  TextFormField(
+                      controller: emailController,
+                      keyboardType: TextInputType.emailAddress,
+                      obscureText: false,
+                      decoration: textFieldDecsoration.copyWith(
+                          hintText: "Enter Your Email : ",
+                          suffix: Icon(Icons.email))),
+                  const SizedBox(
+                    height: 33,
+                  ),
+                  TextFormField(
+                      controller: passwordController,
+                      keyboardType: TextInputType.text,
+                      obscureText: isVisable ? true : false,
+                      decoration: textFieldDecsoration.copyWith(
+                          //textFieldDecsoration
+                          hintText: "Enter Your Password : ",
+                          suffix: IconButton(
+                              onPressed: () {
+                                setState(() {
+                                  isVisable = !isVisable;
+                                });
+                              },
+                              icon: isVisable
+                                  ? Icon(Icons.visibility)
+                                  : Icon(Icons.visibility_off)))),
+                  const SizedBox(
+                    height: 33,
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      logIn();
+                    },
+                    child: isLoading
+                        ? CircularProgressIndicator()
+                        : Text(
+                            "Sign in",
+                            style: TextStyle(fontSize: 19),
+                          ),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(BTNColor),
+                      padding: MaterialStateProperty.all(EdgeInsets.all(12)),
+                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8))),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 33,
+                  ),
+                  TextButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => ForgotPassword()),
+                      );
+                    },
+                    child: Text("Forgot password?",
+                        style: TextStyle(
+                            fontSize: 18, decoration: TextDecoration.underline)),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Do not have an account?",
+                          style: TextStyle(fontSize: 18)),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Register()),
+                            );
+                          },
+                          child: Text('sign up',
+                              style:
+                                  TextStyle(color: Colors.black, fontSize: 18))),
+                    ],
+                  )
+                ],
+              ),
             ),
           ),
         ),
