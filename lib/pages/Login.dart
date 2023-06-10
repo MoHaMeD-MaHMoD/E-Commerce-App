@@ -1,13 +1,18 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last
+// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 
 import 'package:e_commerce_app/Shared/Constant.dart';
+import 'package:e_commerce_app/Shared/myColors.dart';
 import 'package:e_commerce_app/pages/Register.dart';
+import 'package:e_commerce_app/pages/forgot_passowrd.dart';
+import 'package:e_commerce_app/provider/google_signin.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
-import '../Shared/myColors.dart';
 import '../Shared/snackbar';
-import 'forgot_passowrd.dart';
+import 'EmailVirify.dart';
 
 class Login extends StatefulWidget {
   Login({Key? key}) : super(key: key);
@@ -17,128 +22,179 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-  bool isLoading = false;
   bool isVisable = false;
   final emailController = TextEditingController();
-
   final passwordController = TextEditingController();
 
-  logIn() async {
-    setState(() {
-      isLoading = true;
-    });
+  signIn() async {
+    CircularProgressIndicator(
+      color: Colors.white,
+    );
+
     try {
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
-      // showSnackBar(context, "doneee");
     } on FirebaseAuthException catch (e) {
-      if (e.code == 'user-not-found') {
-        showSnackBar(context, "No user found for that email.");
-      } else if (e.code == 'wrong-password') {
-        showSnackBar(context, "Wrong password provided for that user.");
-      } else
-        showSnackBar(context, "${e.code} error");
+      showSnackBar(context, "ERROR :  ${e.code} ");
     }
 
-    setState(() {
-      isLoading = false;
-    });
+// Stop indicator
+    if (!mounted) return;
+    Navigator.pop(context);
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    emailController.dispose();
+    passwordController.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Color.fromARGB(255, 247, 247, 247),
-        body: Center(
-          child: Padding(
-            padding: const EdgeInsets.all(33.0),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  const SizedBox(
-                    height: 64,
+    final googleSignInProvider = Provider.of<GoogleSignInProvider>(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: appbar,
+        title: Text("Sign in"),
+      ),
+      backgroundColor: Color.fromARGB(255, 247, 247, 247),
+      body: Center(
+        child: Padding(
+          padding: const EdgeInsets.all(33.0),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const SizedBox(
+                  height: 64,
+                ),
+                TextField(
+                    controller: emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    obscureText: false,
+                    decoration: textFieldDecsoration.copyWith(
+                        hintText: "Enter Your Email : ",
+                        suffixIcon: Icon(Icons.email))),
+                const SizedBox(
+                  height: 33,
+                ),
+                TextField(
+                    controller: passwordController,
+                    keyboardType: TextInputType.text,
+                    obscureText: isVisable ? false : true,
+                    decoration: textFieldDecsoration.copyWith(
+                        hintText: "Enter Your Password : ",
+                        suffixIcon: IconButton(
+                            onPressed: () {
+                              setState(() {
+                                isVisable = !isVisable;
+                              });
+                            },
+                            icon: isVisable
+                                ? Icon(Icons.visibility)
+                                : Icon(Icons.visibility_off)))),
+                const SizedBox(
+                  height: 33,
+                ),
+                ElevatedButton(
+                  onPressed: () async {
+                    await signIn();
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => VerifyEmailPage()),
+                    );
+                    // showSnackBar(context, "Done ... ");
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(BTNColor),
+                    padding: MaterialStateProperty.all(EdgeInsets.all(12)),
+                    shape: MaterialStateProperty.all(RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8))),
                   ),
-                  TextFormField(
-                      controller: emailController,
-                      keyboardType: TextInputType.emailAddress,
-                      obscureText: false,
-                      decoration: textFieldDecsoration.copyWith(
-                          hintText: "Enter Your Email : ",
-                          suffix: Icon(Icons.email))),
-                  const SizedBox(
-                    height: 33,
+                  child: Text(
+                    "Sign in",
+                    style: TextStyle(fontSize: 19),
                   ),
-                  TextFormField(
-                      controller: passwordController,
-                      keyboardType: TextInputType.text,
-                      obscureText: isVisable ? true : false,
-                      decoration: textFieldDecsoration.copyWith(
-                          //textFieldDecsoration
-                          hintText: "Enter Your Password : ",
-                          suffix: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isVisable = !isVisable;
-                                });
-                              },
-                              icon: isVisable
-                                  ? Icon(Icons.visibility)
-                                  : Icon(Icons.visibility_off)))),
-                  const SizedBox(
-                    height: 33,
+                ),
+                const SizedBox(
+                  height: 9,
+                ),
+                TextButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => ForgotPassword()),
+                    );
+                  },
+                  child: Text("Forgot password?",
+                      style: TextStyle(
+                          fontSize: 18, decoration: TextDecoration.underline)),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text("Do not have an account?",
+                        style: TextStyle(fontSize: 18)),
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Register()),
+                          );
+                        },
+                        child: Text('sign up',
+                            style: TextStyle(
+                                fontSize: 18,
+                                decoration: TextDecoration.underline))),
+                  ],
+                ),
+                SizedBox(
+                  height: 25,
+                ),
+                SizedBox(
+                  width: 300,
+                  child: Row(
+                    children: [
+                      Expanded(
+                          child: Divider(
+                        height: 9,
+                        thickness: .6,
+                      )),
+                      Text(
+                        " OR ",
+                        style: TextStyle(),
+                      ),
+                      Expanded(
+                          child: Divider(
+                        height: 9,
+                        thickness: .6,
+                      )),
+                    ],
                   ),
-                  ElevatedButton(
-                    onPressed: () {
-                      logIn();
+                ),
+                Container(
+                  margin: EdgeInsets.symmetric(vertical: 15),
+                  child: GestureDetector(
+                    onTap: () {
+                      googleSignInProvider.googlelogin();
                     },
-                    child: isLoading
-                        ? CircularProgressIndicator()
-                        : Text(
-                            "Sign in",
-                            style: TextStyle(fontSize: 19),
-                          ),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(BTNColor),
-                      padding: MaterialStateProperty.all(EdgeInsets.all(12)),
-                      shape: MaterialStateProperty.all(RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8))),
+                    child: Container(
+                      padding: EdgeInsets.all(13),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                      ),
+                      child: SvgPicture.asset(
+                        "assets/img/google.svg",
+                        height: 64,
+                      ),
                     ),
                   ),
-                  const SizedBox(
-                    height: 33,
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => ForgotPassword()),
-                      );
-                    },
-                    child: Text("Forgot password?",
-                        style: TextStyle(
-                            fontSize: 18, decoration: TextDecoration.underline)),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text("Do not have an account?",
-                          style: TextStyle(fontSize: 18)),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(builder: (context) => Register()),
-                            );
-                          },
-                          child: Text('sign up',
-                              style:
-                                  TextStyle(color: Colors.black, fontSize: 18))),
-                    ],
-                  )
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

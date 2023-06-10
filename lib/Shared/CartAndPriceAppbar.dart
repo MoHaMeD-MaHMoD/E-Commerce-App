@@ -34,6 +34,9 @@ class CartAndPriceAppbar extends StatelessWidget {
                       onPressed: () {
 
 
+                        
+
+
                         Navigator.push(
                       context,
                       MaterialPageRoute(

@@ -17,6 +17,7 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final cartInstance = Provider.of<Cart>(context);
+    final currentUser = FirebaseAuth.instance.currentUser!;
     return Scaffold(
         body: Padding(
           padding: const EdgeInsets.only(top: 22),
@@ -58,7 +59,11 @@ class Home extends StatelessWidget {
                           },
                           icon: Icon(Icons.add)),
 
-                      leading: Text("\$ ${myProducts[index].price.toString()}",style: TextStyle(fontSize : 16 , fontWeight: FontWeight.w500),),
+                      leading: Text(
+                        "\$ ${myProducts[index].price.toString()}",
+                        style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
 
                       title: Text(
                         "",
@@ -69,9 +74,7 @@ class Home extends StatelessWidget {
               }),
         ),
         appBar: AppBar(
-          actions: [
-          CartAndPriceAppbar()
-          ],
+          actions: [CartAndPriceAppbar()],
           backgroundColor: appbar,
           title: Text("Home"),
         ),
@@ -89,12 +92,12 @@ class Home extends StatelessWidget {
                       ),
                       currentAccountPicture: CircleAvatar(
                         radius: 55,
-                        backgroundImage: AssetImage("assets/img/me.jpg"),
+                        backgroundImage: NetworkImage(currentUser.photoURL!),
                       ),
-                      accountName: Text("MoHaMeD MaHMod",
+                      accountName: Text(currentUser.displayName!,
                           style: TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255))),
-                      accountEmail: Text("ELBeaky@gmail.com")),
+                      accountEmail: Text(currentUser.email!)),
                   ListTile(
                       title: Text("Home"),
                       leading: Icon(Icons.home),
@@ -103,13 +106,10 @@ class Home extends StatelessWidget {
                       title: Text("My products"),
                       leading: Icon(Icons.add_shopping_cart),
                       onTap: () {
-
-                         Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) =>
-                              CheckOut()),
-                    );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CheckOut()),
+                        );
                       }),
                   ListTile(
                       title: Text("About"),
@@ -118,11 +118,8 @@ class Home extends StatelessWidget {
                   ListTile(
                       title: Text("Logout"),
                       leading: Icon(Icons.exit_to_app),
-                      onTap: ()async {
-
-await FirebaseAuth.instance.signOut();
-
-
+                      onTap: () async {
+                        await FirebaseAuth.instance.signOut();
                       }),
                 ],
               ),

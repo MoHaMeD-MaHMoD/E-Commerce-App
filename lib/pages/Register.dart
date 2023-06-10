@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, sort_child_properties_last
 
+import 'package:e_commerce_app/pages/EmailVirify.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/Shared/snackbar';
@@ -297,7 +298,8 @@ class _RegisterState extends State<Register> {
                           if (!mounted) return;
                           Navigator.pushReplacement(
                             context,
-                            MaterialPageRoute(builder: (context) => Login()),
+                            MaterialPageRoute(
+                                builder: (context) => VerifyEmailPage()),
                           );
                         } else {
                           showSnackBar(context, "Check Your Data");
