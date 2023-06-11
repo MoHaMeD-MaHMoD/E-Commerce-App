@@ -3,6 +3,7 @@
 import 'package:e_commerce_app/model/Products.dart';
 import 'package:e_commerce_app/pages/CheckOut.dart';
 import 'package:e_commerce_app/pages/Detail.dart';
+import 'package:e_commerce_app/pages/profilepage.dart';
 import 'package:e_commerce_app/provider/Cart.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -92,12 +93,21 @@ class Home extends StatelessWidget {
                       ),
                       currentAccountPicture: CircleAvatar(
                         radius: 55,
-                        backgroundImage: NetworkImage(currentUser.photoURL!),
+                     //   backgroundImage: NetworkImage(currentUser.photoURL!),
                       ),
                       accountName: Text(currentUser.displayName!,
                           style: TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255))),
                       accountEmail: Text(currentUser.email!)),
+                  ListTile(
+                      title: Text("Profile"),
+                      leading: Icon(Icons.person),
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => Profile()),
+                        );
+                      }),
                   ListTile(
                       title: Text("Home"),
                       leading: Icon(Icons.home),

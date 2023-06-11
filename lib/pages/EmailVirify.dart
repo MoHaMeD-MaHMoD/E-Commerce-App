@@ -48,7 +48,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   sendVerificationEmail() async {
     try {
-      // await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+     // await FirebaseAuth.instance.currentUser!.sendEmailVerification();
       setState(() {
         canResendEmail = false;
       });
@@ -93,7 +93,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      // canResendEmail? sendVerificationEmail() : null;
+                   //  canResendEmail? sendVerificationEmail() : null;
                     },
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.all(BTNColor),

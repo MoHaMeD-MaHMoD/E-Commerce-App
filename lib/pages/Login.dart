@@ -102,11 +102,11 @@ class _LoginState extends State<Login> {
                 ElevatedButton(
                   onPressed: () async {
                     await signIn();
-                    Navigator.pushReplacement(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => VerifyEmailPage()),
-                    );
+                      // Navigator.pushReplacement(
+                      //   context,
+                      //   MaterialPageRoute(
+                      //       builder: (context) => VerifyEmailPage()),
+                      // );
                     // showSnackBar(context, "Done ... ");
                   },
                   style: ButtonStyle(
