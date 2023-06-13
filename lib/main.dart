@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors
 
+import 'package:e_commerce_app/pages/Home.dart';
 import 'package:e_commerce_app/provider/google_signin.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -48,7 +49,7 @@ class MyApp extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return showSnackBar(context, "Something went wrong");
               } else if (snapshot.hasData) {
-                return VerifyEmailPage(); // home() OR verify email
+                return Home(); // home() OR verify email
               } else {
                 return Login();
               }
