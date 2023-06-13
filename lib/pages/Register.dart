@@ -32,6 +32,68 @@ class _RegisterState extends State<Register> {
   bool has1Number = false;
   bool hasSpecialCharachter = false;
 
+
+  
+  showmodel() {
+    return showModalBottomSheet(
+      context: context,
+      builder: (BuildContext context) {
+        return Container(
+          padding: EdgeInsets.all(22),
+          height: 170,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  await uploadImage2Screen(ImageSource.camera);
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.camera,
+                      size: 30,
+                    ),
+                    SizedBox(
+                      width: 11,
+                    ),
+                    Text(
+                      "From Camera",
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 22,
+              ),
+              GestureDetector(
+                onTap: () {
+                  uploadImage2Screen(ImageSource.gallery);
+                },
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.photo_outlined,
+                      size: 30,
+                    ),
+                    SizedBox(
+                      width: 11,
+                    ),
+                    Text(
+                      "From Gallery",
+                      style: TextStyle(fontSize: 20),
+                    )
+                  ],
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   onPasswordChanged(String password) {
     has8Charachter = false;
     hasLowerCase = false;
@@ -122,9 +184,8 @@ class _RegisterState extends State<Register> {
     });
   }
 
-  uploadImage2Screen() async {
-    final pickedImg =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+  uploadImage2Screen(ImageSource imageSource) async {
+    final pickedImg = await ImagePicker().pickImage(source: imageSource);
     try {
       if (pickedImg != null) {
         setState(() {
@@ -136,6 +197,9 @@ class _RegisterState extends State<Register> {
     } catch (e) {
       print("Error => $e");
     }
+
+    if (!mounted) return;
+    Navigator.pop(context);
   }
 
   @override
@@ -194,7 +258,7 @@ class _RegisterState extends State<Register> {
                           bottom: -10,
                           child: IconButton(
                             onPressed: () {
-                              uploadImage2Screen();
+                              showmodel() ;
                             },
                             icon: const Icon(Icons.add_a_photo),
                             color: Color.fromARGB(255, 94, 115, 128),
