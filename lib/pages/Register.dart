@@ -8,6 +8,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/Shared/snackbar';
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' show basename;
+
+import "dart:math";
+
+import 'package:firebase_storage/firebase_storage.dart';
+
 import 'dart:io';
 
 import 'Login.dart';
@@ -22,6 +28,7 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   final _formKey = GlobalKey<FormState>();
   File? imgPath;
+  String? imgName;
 
   bool isLoading = false;
   bool isVisable = false;
@@ -32,8 +39,6 @@ class _RegisterState extends State<Register> {
   bool has1Number = false;
   bool hasSpecialCharachter = false;
 
-
-  
   showmodel() {
     return showModalBottomSheet(
       context: context,
@@ -152,12 +157,22 @@ class _RegisterState extends State<Register> {
         email: emailController.text,
         password: passwordController.text,
       );
+
+// Upload image to firebase storage
+      final storageRef =
+          FirebaseStorage.instance.ref("users-profile-imgs/$imgName");
+      await storageRef.putFile(imgPath!);
+      String urll = await storageRef.getDownloadURL();
+
+      print(credential.user!.uid);
+
       CollectionReference users =
           FirebaseFirestore.instance.collection('users');
 
       users
           .doc(credential.user!.uid)
           .set({
+            "imgLink": urll,
             'Email': emailController.text,
             'Password': passwordController.text,
             'UserName': userNameController.text,
@@ -190,6 +205,10 @@ class _RegisterState extends State<Register> {
       if (pickedImg != null) {
         setState(() {
           imgPath = File(pickedImg.path);
+          imgName = basename(pickedImg.path);
+          int random = Random().nextInt(9999999);
+          imgName = "$random$imgName";
+          print(imgName);
         });
       } else {
         print("NO img selected");
@@ -258,7 +277,7 @@ class _RegisterState extends State<Register> {
                           bottom: -10,
                           child: IconButton(
                             onPressed: () {
-                              showmodel() ;
+                              showmodel();
                             },
                             icon: const Icon(Icons.add_a_photo),
                             color: Color.fromARGB(255, 94, 115, 128),
