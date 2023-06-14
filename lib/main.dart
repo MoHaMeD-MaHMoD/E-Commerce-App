@@ -1,10 +1,9 @@
 // ignore_for_file: prefer_const_constructors
 
-import 'package:e_commerce_app/pages/Home.dart';
-import 'package:e_commerce_app/provider/google_signin.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-
+import 'package:e_commerce_app/Shared/snackbar';
 import 'package:e_commerce_app/pages/EmailVirify.dart';
+import 'package:e_commerce_app/provider/google_signin.dart';
+
 import 'package:e_commerce_app/pages/Login.dart';
 import 'package:e_commerce_app/provider/Cart.dart';
 import 'package:provider/provider.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import 'Shared/snackbar';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -49,7 +47,7 @@ class MyApp extends StatelessWidget {
               } else if (snapshot.hasError) {
                 return showSnackBar(context, "Something went wrong");
               } else if (snapshot.hasData) {
-                return Home(); // home() OR verify email
+                return VerifyEmailPage(); // home() OR verify email
               } else {
                 return Login();
               }

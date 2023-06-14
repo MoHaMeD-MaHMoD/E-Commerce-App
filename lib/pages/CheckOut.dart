@@ -24,14 +24,15 @@ class CheckOut extends StatelessWidget {
         children: [
           SingleChildScrollView(
             child: SizedBox(
-                height: 550,
+                height: 425,
                 child: ListView.builder(
                     padding: const EdgeInsets.all(8),
                     itemCount: cartInstance.selectedProducts.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Card(
                         child: ListTile(
-                          title: Text(cartInstance.selectedProducts[index].name),
+                          title:
+                              Text(cartInstance.selectedProducts[index].name),
                           subtitle: Text(
                               "${cartInstance.selectedProducts[index].price} - ${cartInstance.selectedProducts[index].shop}"),
                           leading: CircleAvatar(
@@ -40,14 +41,14 @@ class CheckOut extends StatelessWidget {
                           ),
                           trailing: IconButton(
                               onPressed: () {
-                                cartInstance.removeProduct(cartInstance.selectedProducts[index]);
+                                cartInstance.removeProduct(
+                                    cartInstance.selectedProducts[index]);
                               },
                               icon: Icon(Icons.remove)),
                         ),
                       );
                     })),
           ),
-
           ElevatedButton(
             onPressed: () {},
             child: Text(
@@ -55,7 +56,7 @@ class CheckOut extends StatelessWidget {
               style: TextStyle(fontSize: 19),
             ),
             style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(MAIN),
+              backgroundColor: MaterialStateProperty.all(mainColor),
               padding: MaterialStateProperty.all(EdgeInsets.all(12)),
               shape: MaterialStateProperty.all(RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8))),

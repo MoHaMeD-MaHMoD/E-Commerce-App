@@ -1,6 +1,6 @@
-// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, dead_code
-
+import 'package:e_commerce_app/Shared/CartAndPriceAppbar.dart';
 import 'package:e_commerce_app/Shared/GetUserImg.dart';
+import 'package:e_commerce_app/Shared/myColors.dart';
 import 'package:e_commerce_app/model/Products.dart';
 import 'package:e_commerce_app/pages/CheckOut.dart';
 import 'package:e_commerce_app/pages/Detail.dart';
@@ -10,8 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../Shared/CartAndPriceAppbar.dart';
-import '../Shared/myColors.dart';
+
 
 class Home extends StatelessWidget {
   const Home({Key? key}) : super(key: key);
@@ -24,7 +23,7 @@ class Home extends StatelessWidget {
         body: Padding(
           padding: const EdgeInsets.only(top: 22),
           child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 2,
                   childAspectRatio: 3 / 2,
                   crossAxisSpacing: 10,
@@ -41,6 +40,25 @@ class Home extends StatelessWidget {
                     );
                   },
                   child: GridTile(
+                    footer: GridTileBar(
+                      // backgroundColor: Color.fromARGB(66, 73, 127, 110),
+                      trailing: IconButton(
+                          color: const Color.fromARGB(255, 62, 94, 70),
+                          onPressed: () {
+                            cartInstance.addProduct(myProducts[index]);
+                          },
+                          icon: const Icon(Icons.add)),
+
+                      leading: Text(
+                        "\$ ${myProducts[index].price.toString()}",
+                        style: const TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w500),
+                      ),
+
+                      title: const Text(
+                        "",
+                      ),
+                    ),
                     child: Stack(children: [
                       Positioned(
                         top: -3,
@@ -52,33 +70,14 @@ class Home extends StatelessWidget {
                             child: Image.asset(myProducts[index].img)),
                       ),
                     ]),
-                    footer: GridTileBar(
-                      // backgroundColor: Color.fromARGB(66, 73, 127, 110),
-                      trailing: IconButton(
-                          color: Color.fromARGB(255, 62, 94, 70),
-                          onPressed: () {
-                            cartInstance.addProduct(myProducts[index]);
-                          },
-                          icon: Icon(Icons.add)),
-
-                      leading: Text(
-                        "\$ ${myProducts[index].price.toString()}",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w500),
-                      ),
-
-                      title: Text(
-                        "",
-                      ),
-                    ),
                   ),
                 );
               }),
         ),
         appBar: AppBar(
-          actions: [CartAndPriceAppbar()],
+          actions: const [CartAndPriceAppbar()],
           backgroundColor: appbar,
-          title: Text("Home"),
+          title: const Text("Home"),
         ),
         drawer: Drawer(
           child: Column(
@@ -87,53 +86,55 @@ class Home extends StatelessWidget {
               Column(
                 children: [
                   UserAccountsDrawerHeader(
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                         image: DecorationImage(
                             image: AssetImage("assets/img/background.jpg"),
                             fit: BoxFit.cover),
                       ),
-                      currentAccountPicture: GetUserImg(),
+                      currentAccountPicture: const GetUserImg(),
                       accountName: Text(currentUser.displayName!,
-                          style: TextStyle(
+                          style: const TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255))),
                       accountEmail: Text(currentUser.email!)),
                   ListTile(
-                      title: Text("Profile"),
-                      leading: Icon(Icons.person),
+                      title: const Text("Profile"),
+                      leading: const Icon(Icons.person),
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => Profile()),
+                          MaterialPageRoute(
+                              builder: (context) => const Profile()),
                         );
                       }),
                   ListTile(
-                      title: Text("Home"),
-                      leading: Icon(Icons.home),
+                      title: const Text("Home"),
+                      leading: const Icon(Icons.home),
                       onTap: () {}),
                   ListTile(
-                      title: Text("My products"),
-                      leading: Icon(Icons.add_shopping_cart),
+                      title: const Text("My products"),
+                      leading: const Icon(Icons.add_shopping_cart),
                       onTap: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => CheckOut()),
+                          MaterialPageRoute(
+                              builder: (context) => const CheckOut()),
                         );
                       }),
                   ListTile(
-                      title: Text("About"),
-                      leading: Icon(Icons.help_center),
+                      title: const Text("About"),
+                      leading: const Icon(Icons.help_center),
                       onTap: () {}),
                   ListTile(
-                      title: Text("Logout"),
-                      leading: Icon(Icons.exit_to_app),
+                      title: const Text("Logout"),
+                      leading: const Icon(Icons.exit_to_app),
                       onTap: () async {
                         await FirebaseAuth.instance.signOut();
                       }),
                 ],
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 12),
-                child: Text("Developed by ELBeaky © 2023",
+                margin: const EdgeInsets.only(bottom: 12),
+                child: const Text("Developed by ELBeaky © 2023",
                     style: TextStyle(fontSize: 16)),
               )
             ],
@@ -141,42 +142,3 @@ class Home extends StatelessWidget {
         ));
   }
 }
-
-
-/*
-
-Row(
-              children: [
-                 Stack(
-                    children: [
-                      Positioned(
-                        bottom: 24,
-                        child: Container(
-                            child: Text(
-                              "${cartInstancee.selectedProducts.length}",
-                              style: TextStyle(
-                                  fontSize: 16,
-                                  color: Color.fromARGB(255, 0, 0, 0)),
-                            ),
-                            padding: EdgeInsets.all(5),
-                            decoration: BoxDecoration(
-                                color: second, shape: BoxShape.circle)),
-                      ),
-                      IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons.add_shopping_cart),
-                      ),
-                    ],
-                  ),
-                Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: Text(
-                    "\$ 13",
-                    style: TextStyle(fontSize: 18),
-                  ),
-                ),
-              ],
-            )            
-
-
-*/

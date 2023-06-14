@@ -1,9 +1,13 @@
 import 'dart:io';
+import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:path/path.dart' show basename;
 
 import 'package:e_commerce_app/Shared/GetUserData.dart';
 import 'package:e_commerce_app/Shared/GetUserImg.dart';
 import 'package:e_commerce_app/Shared/snackbar';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:e_commerce_app/Shared/myColors.dart';
 import 'package:image_picker/image_picker.dart';
@@ -19,6 +23,8 @@ class Profile extends StatefulWidget {
 class _ProfileState extends State<Profile> {
   final credential = FirebaseAuth.instance.currentUser;
   File? imgPath;
+  String? imgName;
+  CollectionReference users = FirebaseFirestore.instance.collection('users');
 
   showmodel() {
     return showModalBottomSheet(
@@ -86,6 +92,9 @@ class _ProfileState extends State<Profile> {
       if (pickedImg != null) {
         setState(() {
           imgPath = File(pickedImg.path);
+          imgName = basename(pickedImg.path);
+          int random = Random().nextInt(9999999);
+          imgName = "$random$imgName";
         });
       } else {
         showSnackBar(context, "NO img selected");
@@ -152,8 +161,18 @@ class _ProfileState extends State<Profile> {
                         left: 99,
                         bottom: -10,
                         child: IconButton(
-                          onPressed: () {
-                            showmodel();
+                          onPressed: () async {
+                            await showmodel();
+
+                            if (imgPath != null) {
+                              final storageRef = FirebaseStorage.instance
+                                  .ref("users-profile-imgs/$imgName");
+                              await storageRef.putFile(imgPath!);
+                              String urll = await storageRef.getDownloadURL();
+                              users.doc(credential!.uid).update({
+                                "ImgLink": urll,
+                              });
+                            }
                           },
                           icon: const Icon(Icons.add_a_photo),
                           color: const Color.fromARGB(255, 94, 115, 128),
@@ -170,7 +189,7 @@ class _ProfileState extends State<Profile> {
                   child: Container(
                 padding: const EdgeInsets.all(11),
                 decoration: BoxDecoration(
-                    color: MAIN, borderRadius: BorderRadius.circular(11)),
+                    color: mainColor, borderRadius: BorderRadius.circular(11)),
                 child: const Text(
                   "Info from firebase Auth",
                   style: TextStyle(
@@ -218,7 +237,8 @@ class _ProfileState extends State<Profile> {
                   child: Container(
                       padding: const EdgeInsets.all(11),
                       decoration: BoxDecoration(
-                          color: MAIN, borderRadius: BorderRadius.circular(11)),
+                          color: mainColor,
+                          borderRadius: BorderRadius.circular(11)),
                       child: const Text(
                         "Info from firebase firestore",
                         style: TextStyle(

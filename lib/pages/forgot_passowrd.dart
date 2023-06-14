@@ -1,17 +1,13 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
 import 'package:firebase_auth/firebase_auth.dart';
-
 import '../Shared/Constant.dart';
 import '../Shared/myColors.dart';
-
 import 'package:flutter/material.dart';
-
 import '../Shared/snackbar';
 import 'Login.dart';
 
 class ForgotPassword extends StatefulWidget {
   ForgotPassword({Key? key}) : super(key: key);
-
   @override
   State<ForgotPassword> createState() => _ForgotPasswordState();
 }
@@ -97,7 +93,7 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                     }
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(BTNColor),
+                    backgroundColor: MaterialStateProperty.all(bTNColor),
                     padding: MaterialStateProperty.all(EdgeInsets.all(12)),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8))),

@@ -23,7 +23,6 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
 
@@ -48,14 +47,10 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   sendVerificationEmail() async {
     try {
-     // await FirebaseAuth.instance.currentUser!.sendEmailVerification();
-      setState(() {
-        canResendEmail = false;
-      });
+      await FirebaseAuth.instance.currentUser!.sendEmailVerification();
+     
       await Future.delayed(const Duration(seconds: 5));
-      setState(() {
-        canResendEmail = true;
-      });
+     
     } catch (e) {
       showSnackBar(context, "ERROR => ${e.toString()}");
     }
@@ -63,7 +58,6 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     timer?.cancel();
     super.dispose();
   }
@@ -71,7 +65,7 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
   @override
   Widget build(BuildContext context) {
     return isEmailVerified
-        ? Home()
+        ? const Home()
         : Scaffold(
             appBar: AppBar(
               title: const Text("Verify Email"),
@@ -93,10 +87,10 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                   ),
                   ElevatedButton(
                     onPressed: () {
-                   //  canResendEmail? sendVerificationEmail() : null;
+                      sendVerificationEmail() ;
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(BTNColor),
+                      backgroundColor: MaterialStateProperty.all(bTNColor),
                       padding:
                           MaterialStateProperty.all(const EdgeInsets.all(12)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
@@ -114,14 +108,13 @@ class _VerifyEmailPageState extends State<VerifyEmailPage> {
                     onPressed: () {
                       Navigator.pushReplacement(
                         context,
-                        MaterialPageRoute(builder: (context) => Login()),
+                        MaterialPageRoute(builder: (context) => const Login()),
                       );
-                    
-                        FirebaseAuth.instance.signOut();
-                     
+
+                      FirebaseAuth.instance.signOut();
                     },
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(BTNColor),
+                      backgroundColor: MaterialStateProperty.all(bTNColor),
                       padding:
                           MaterialStateProperty.all(const EdgeInsets.all(12)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(

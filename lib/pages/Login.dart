@@ -1,7 +1,6 @@
-// ignore_for_file: prefer_const_literals_to_create_immutables, prefer_const_constructors, use_build_context_synchronously
-
 import 'package:e_commerce_app/Shared/Constant.dart';
 import 'package:e_commerce_app/Shared/myColors.dart';
+import 'package:e_commerce_app/Shared/snackbar';
 import 'package:e_commerce_app/pages/Register.dart';
 import 'package:e_commerce_app/pages/forgot_passowrd.dart';
 import 'package:e_commerce_app/provider/google_signin.dart';
@@ -11,11 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
-import '../Shared/snackbar';
-import 'EmailVirify.dart';
-
 class Login extends StatefulWidget {
-  Login({Key? key}) : super(key: key);
+  const Login({Key? key}) : super(key: key);
 
   @override
   State<Login> createState() => _LoginState();
@@ -23,29 +19,30 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   bool isVisable = false;
+  bool isLoading = false;
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
 
   signIn() async {
-    CircularProgressIndicator(
-      color: Colors.white,
-    );
+    setState(() {
+      isLoading = true;
+    });
 
     try {
-      final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+       await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: emailController.text, password: passwordController.text);
     } on FirebaseAuthException catch (e) {
       showSnackBar(context, "ERROR :  ${e.code} ");
     }
 
 // Stop indicator
-    if (!mounted) return;
-    Navigator.pop(context);
+    setState(() {
+      isLoading = false;
+    });
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     emailController.dispose();
     passwordController.dispose();
     super.dispose();
@@ -58,9 +55,9 @@ class _LoginState extends State<Login> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: appbar,
-        title: Text("Sign in"),
+        title: const Text("Sign in"),
       ),
-      backgroundColor: Color.fromARGB(255, 247, 247, 247),
+      backgroundColor: const Color.fromARGB(255, 247, 247, 247),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.all(33.0),
@@ -77,7 +74,7 @@ class _LoginState extends State<Login> {
                     obscureText: false,
                     decoration: textFieldDecsoration.copyWith(
                         hintText: "Enter Your Email : ",
-                        suffixIcon: Icon(Icons.email))),
+                        suffixIcon: const Icon(Icons.email))),
                 const SizedBox(
                   height: 33,
                 ),
@@ -94,31 +91,33 @@ class _LoginState extends State<Login> {
                               });
                             },
                             icon: isVisable
-                                ? Icon(Icons.visibility)
-                                : Icon(Icons.visibility_off)))),
+                                ? const Icon(Icons.visibility)
+                                : const Icon(Icons.visibility_off)))),
                 const SizedBox(
                   height: 33,
                 ),
                 ElevatedButton(
                   onPressed: () async {
                     await signIn();
-                      // Navigator.pushReplacement(
-                      //   context,
-                      //   MaterialPageRoute(
-                      //       builder: (context) => VerifyEmailPage()),
-                      // );
+                    // Navigator.pushReplacement(
+                    //   context,
+                    //   MaterialPageRoute(
+                    //       builder: (context) => VerifyEmailPage()),
+                    // );
                     // showSnackBar(context, "Done ... ");
                   },
                   style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(BTNColor),
-                    padding: MaterialStateProperty.all(EdgeInsets.all(12)),
+                    backgroundColor: MaterialStateProperty.all(bTNColor),
+                    padding: MaterialStateProperty.all(const EdgeInsets.all(12)),
                     shape: MaterialStateProperty.all(RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8))),
                   ),
-                  child: Text(
-                    "Sign in",
-                    style: TextStyle(fontSize: 19),
-                  ),
+                  child: isLoading
+                      ? const CircularProgressIndicator()
+                      : const Text(
+                          "Sign in",
+                          style: TextStyle(fontSize: 19),
+                        ),
                 ),
                 const SizedBox(
                   height: 9,
@@ -130,14 +129,14 @@ class _LoginState extends State<Login> {
                       MaterialPageRoute(builder: (context) => ForgotPassword()),
                     );
                   },
-                  child: Text("Forgot password?",
+                  child: const Text("Forgot password?",
                       style: TextStyle(
                           fontSize: 18, decoration: TextDecoration.underline)),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text("Do not have an account?",
+                    const Text("Do not have an account?",
                         style: TextStyle(fontSize: 18)),
                     TextButton(
                         onPressed: () {
@@ -146,16 +145,16 @@ class _LoginState extends State<Login> {
                             MaterialPageRoute(builder: (context) => Register()),
                           );
                         },
-                        child: Text('sign up',
+                        child: const Text('sign up',
                             style: TextStyle(
                                 fontSize: 18,
                                 decoration: TextDecoration.underline))),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 25,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 300,
                   child: Row(
                     children: [
@@ -177,14 +176,14 @@ class _LoginState extends State<Login> {
                   ),
                 ),
                 Container(
-                  margin: EdgeInsets.symmetric(vertical: 15),
+                  margin: const EdgeInsets.symmetric(vertical: 15),
                   child: GestureDetector(
                     onTap: () {
                       googleSignInProvider.googlelogin();
                     },
                     child: Container(
-                      padding: EdgeInsets.all(13),
-                      decoration: BoxDecoration(
+                      padding: const EdgeInsets.all(13),
+                      decoration: const BoxDecoration(
                         shape: BoxShape.circle,
                       ),
                       child: SvgPicture.asset(

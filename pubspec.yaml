@@ -44,6 +44,7 @@ dependencies:
   flutter_svg: ^2.0.6
   intl: ^0.17.0
   image_picker: ^0.8.8
+  path: ^1.8.3
 
 dev_dependencies:
   flutter_test:

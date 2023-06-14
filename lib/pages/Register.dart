@@ -19,7 +19,7 @@ import 'dart:io';
 import 'Login.dart';
 
 class Register extends StatefulWidget {
-  Register({Key? key}) : super(key: key);
+  const Register({Key? key}) : super(key: key);
 
   @override
   State<Register> createState() => _RegisterState();
@@ -132,7 +132,7 @@ class _RegisterState extends State<Register> {
     String p =
         r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 
-    RegExp regExp = new RegExp(p);
+    RegExp regExp = RegExp(p);
 
     return regExp.hasMatch(em);
   }
@@ -163,8 +163,6 @@ class _RegisterState extends State<Register> {
           FirebaseStorage.instance.ref("users-profile-imgs/$imgName");
       await storageRef.putFile(imgPath!);
       String urll = await storageRef.getDownloadURL();
-
-      print(credential.user!.uid);
 
       CollectionReference users =
           FirebaseFirestore.instance.collection('users');
@@ -208,13 +206,12 @@ class _RegisterState extends State<Register> {
           imgName = basename(pickedImg.path);
           int random = Random().nextInt(9999999);
           imgName = "$random$imgName";
-          print(imgName);
         });
       } else {
-        print("NO img selected");
+        showSnackBar(context, "NO img selected");
       }
     } catch (e) {
-      print("Error => $e");
+      showSnackBar(context, "Error => $e");
     }
 
     if (!mounted) return;
@@ -223,7 +220,6 @@ class _RegisterState extends State<Register> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     emailController.dispose();
     passwordController.dispose();
 
@@ -493,7 +489,8 @@ class _RegisterState extends State<Register> {
                         if (!mounted) return;
                         Navigator.pushReplacement(
                           context,
-                          MaterialPageRoute(builder: (context) => Login()),
+                          MaterialPageRoute(
+                              builder: (context) => VerifyEmailPage()),
                         );
                       } else {
                         showSnackBar(context, "Check Your Data");
@@ -506,7 +503,7 @@ class _RegisterState extends State<Register> {
                             style: TextStyle(fontSize: 19),
                           ),
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all(BTNColor),
+                      backgroundColor: MaterialStateProperty.all(bTNColor),
                       padding: MaterialStateProperty.all(EdgeInsets.all(12)),
                       shape: MaterialStateProperty.all(RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8))),
