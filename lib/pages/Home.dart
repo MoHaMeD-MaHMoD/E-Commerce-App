@@ -1,5 +1,6 @@
 // ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables, sort_child_properties_last, dead_code
 
+import 'package:e_commerce_app/Shared/GetUserImg.dart';
 import 'package:e_commerce_app/model/Products.dart';
 import 'package:e_commerce_app/pages/CheckOut.dart';
 import 'package:e_commerce_app/pages/Detail.dart';
@@ -91,10 +92,7 @@ class Home extends StatelessWidget {
                             image: AssetImage("assets/img/background.jpg"),
                             fit: BoxFit.cover),
                       ),
-                      currentAccountPicture: CircleAvatar(
-                        radius: 55,
-                     //   backgroundImage: NetworkImage(currentUser.photoURL!),
-                      ),
+                      currentAccountPicture: GetUserImg(),
                       accountName: Text(currentUser.displayName!,
                           style: TextStyle(
                               color: Color.fromARGB(255, 255, 255, 255))),

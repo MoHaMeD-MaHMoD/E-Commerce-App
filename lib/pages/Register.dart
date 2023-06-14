@@ -172,7 +172,7 @@ class _RegisterState extends State<Register> {
       users
           .doc(credential.user!.uid)
           .set({
-            "imgLink": urll,
+            "ImgLink": urll,
             'Email': emailController.text,
             'Password': passwordController.text,
             'UserName': userNameController.text,

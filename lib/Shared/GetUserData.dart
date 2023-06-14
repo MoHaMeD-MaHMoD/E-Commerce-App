@@ -37,7 +37,7 @@ class _GetUserDataState extends State<GetUserData> {
                       maxLength: 20,
                       decoration:
                           InputDecoration(hintText: "${data[keyValue]}")),
-                  SizedBox(
+                  const SizedBox(
                     height: 22,
                   ),
                   Row(
@@ -53,7 +53,7 @@ class _GetUserDataState extends State<GetUserData> {
                             editDialog.clear();
                           });
                         },
-                        child: Text(
+                        child: const Text(
                           "Update",
                           style: TextStyle(fontSize: 22),
                         ),
@@ -63,7 +63,7 @@ class _GetUserDataState extends State<GetUserData> {
                           //// addnewtask();
                           Navigator.pop(context);
                         },
-                        child: Text(
+                        child: const Text(
                           "Cancel",
                           style: TextStyle(fontSize: 22),
                         ),
@@ -110,7 +110,7 @@ class _GetUserDataState extends State<GetUserData> {
                     onPressed: () {
                       myDialog(data, 'UserName');
                     },
-                    icon: Icon(Icons.edit),
+                    icon: const Icon(Icons.edit),
                   )
                 ],
               ),
@@ -128,7 +128,7 @@ class _GetUserDataState extends State<GetUserData> {
                     onPressed: () {
                       myDialog(data, 'Title');
                     },
-                    icon: Icon(Icons.edit),
+                    icon: const Icon(Icons.edit),
                   )
                 ],
               ),
@@ -164,7 +164,7 @@ class _GetUserDataState extends State<GetUserData> {
                     onPressed: () {
                       myDialog(data, 'Age');
                     },
-                    icon: Icon(Icons.edit),
+                    icon: const Icon(Icons.edit),
                   )
                 ],
               ),
